@@ -1,29 +1,49 @@
-# AI Assistant Project (with Groq & HuggingFace)
+# 🚀 AI Assistant Project (Groq & RAG & Google Tools)
 
-이 프로젝트는 `ai-assist-google` 프로젝트의 구조를 기반으로, 핵심 AI 모델을 Groq의 초고속 언어 모델(LPU 기반)과 HuggingFace의 오픈소스 임베딩 모델로 전환한 AI 업무 자동화 비서 애플리케이션입니다.
+이 프로젝트는 `ai-assist-google`을 기반으로, 핵심 AI 모델을 Groq의 초고속 언어 모델(LPU)과 HuggingFace의 오픈소스 임베딩 모델로 전환하여 구현한 AI 업무 자동화 비서 애플리케이션입니다.
 
-기존 Google Gemini 모델 대신 Llama 3와 같은 고성능 오픈소스 LLM을 Groq API를 통해 사용함으로써, 비용 효율적이고 빠른 응답 속도를 경험할 수 있습니다. 또한, Google의 임베딩 모델 대신 한국어 환경에 특화된 오픈소스 임베딩 모델을 사용하여 RAG(검색 증강 생성) 성능을 최적화합니다.
+기존 Google Gemini 대신 Llama 3와 같은 고성능 오픈소스 LLM을 Groq API를 통해 사용하여, 비용 효율적이고 빠른 응답 속도를 경험할 수 있습니다. 또한, 한국어 환경에 특화된 오픈소스 임베딩 모델을 활용하여 RAG(검색 증강 생성) 성능을 최적화하고, Google Workspace(Gmail, Calendar) 도구를 연동하여 실제 업무 생산성을 극대화합니다.
 
 ## 🌟 주요 특징
 
-- **🚀 초고속 LLM 추론**: Groq 클라우드의 LPU(Language Processing Unit)를 활용하여 실시간에 가까운 빠른 응답 속도 제공.
-- **🔄 유연한 모델 선택**: `llama3-8b-8192`, `mixtral-8x7b-32768` 등 Groq이 제공하는 다양한 최신 오픈소스 LLM을 손쉽게 변경하며 사용 가능.
-- **🇰🇷 한국어 특화 RAG**: `jhgan/ko-sbert-nli`와 같은 HuggingFace의 고성능 한국어 임베딩 모델을 사용하여 문서 검색 및 요약의 정확도 향상.
-- **🛠️ Google 도구 연동**: 기존 `ai-assist-google`과 동일하게 Gmail, Google Calendar 등 Google Workspace 도구를 활용하는 에이전트 기능 유지.
-- **🧩 확장 가능한 아키텍처**: LangChain과 LangGraph를 기반으로 설계되어, 새로운 도구나 전문가 에이전트를 손쉽게 추가할 수 있는 유연한 구조.
+- **🚀 초고속 LLM 추론**: Groq 클라우드의 LPU(Language Processing Unit)를 활용하여 실시간에 가까운 응답 속도를 제공합니다.
+- **🔄 유연한 모델 선택**: `llama3-8b-8192`, `mixtral-8x7b-32768` 등 Groq이 제공하는 다양한 최신 오픈소스 LLM을 손쉽게 변경하여 사용할 수 있습니다.
+- **🇰🇷 한국어 특화 RAG**: `jhgan/ko-sbert-nli`와 같은 HuggingFace의 고성능 한국어 임베딩 모델을 사용하여 로컬 문서 검색 및 요약의 정확도를 높였습니다.
+- **🛠️ Google 도구 연동**: Gmail, Google Calendar 등 Google Workspace 도구를 활용하는 에이전트 기능을 통해 이메일 검색, 일정 조회 등 실제 업무를 처리할 수 있습니다.
+- **🧩 확장 가능한 아키텍처**: LangChain과 LangGraph를 기반으로 설계되어, 새로운 도구나 전문가 에이전트를 손쉽게 추가할 수 있는 유연한 구조를 가집니다.
 
 ## ⚙️ 시스템 아키텍처
 
-![System Architecture](https://i.imgur.com/your-architecture-image.png)
-*(여기에 ai-assist-google과 유사한 아키텍처 다이어그램을 삽입할 수 있습니다. LLM과 Embedding 부분이 Groq과 HuggingFace로 변경된 점을 강조하세요.)*
+이 시스템은 사용자의 요청을 받아 의도를 파악하고, 가장 적절한 도구를 동적으로 선택하여 작업을 수행하는 에이전트 기반으로 설계되었습니다.
 
-1.  **User Interface**: Streamlit 또는 React/Vue 등 프론트엔드 프레임워크
-2.  **Backend (FastAPI)**: 사용자 요청을 받아 처리하는 API 서버
-3.  **Agent Executor (LangGraph)**: 사용자의 요청 의도를 파악하고, 적절한 전문가 에이전트(Specialist Agent)나 도구(Tool)를 동적으로 선택하고 실행
-4.  **LLM (Groq)**: `ChatGroq`을 통해 Llama 3와 같은 언어 모델을 호출하여 사고(Reasoning)와 응답 생성 담당
+1.  **User Interface (Streamlit)**: 사용자는 웹 기반 인터페이스를 통해 AI 비서에게 작업을 요청합니다.
+2.  **Backend (FastAPI)**: API 서버는 사용자 요청을 받아 LangGraph로 구성된 에이전트 워크플로우를 실행합니다.
+3.  **Agent Executor (LangGraph)**: 사용자의 요청을 분석하여 '마스터 에이전트'가 적절한 '전문가 에이전트'나 도구를 동적으로 선택하고 실행합니다.
+4.  **Language Model (Groq)**: `ChatGroq`을 통해 Llama 3와 같은 언어 모델을 호출하여 사용자의 의도를 파악하고, 최종 응답을 생성합니다.
 5.  **Tools**:
-    -   **RAG Retriever**: FAISS 벡터 저장소와 HuggingFace 임베딩을 사용하여 로컬 문서 검색
-    -   **Google Tools**: Gmail, Google Calendar API를 사용하여 관련 정보 조회 및 작업 수행
-6.  **Vector Store (FAISS)**: HuggingFace 임베딩으로 변환된 문서 벡터를 저장하는 공간
+    -   **RAG Retriever**: 로컬 `documents` 폴더의 텍스트 파일을 FAISS 벡터 저장소에 인덱싱하고, HuggingFace 임베딩을 사용하여 관련 문서를 검색합니다.
+    -   **Google Tools**: OAuth2 인증을 통해 사용자의 Gmail, Google Calendar 데이터를 안전하게 조회하고 관련 작업을 수행합니다.
+6.  **Vector Store (FAISS)**: HuggingFace 임베딩으로 변환된 문서 벡터를 저장하고 빠른 검색을 지원합니다.
 
 ## 🚀 시작하기
+
+### 1. 사전 준비
+
+-   Python 3.8 이상
+-   Google Cloud Platform 프로젝트 및 OAuth 클라이언트 ID. (`credentials.json` 파일)
+-   Groq API 키
+
+### 2. 설치
+
+```bash
+# 1. 프로젝트 클론
+git clone [https://github.com/choijun-0613/ai-assistant.git](https://github.com/choijun-0613/ai-assistant.git)
+cd ai-assistant
+
+# 2. 필요한 라이브러리 설치
+pip install -r requirements.txt
+
+# 3. 환경 변수 설정
+# .env 파일을 생성하고 아래 내용을 채워넣으세요.
+# (보안을 위해 .gitignore에 등록되어 있습니다)
+cp .env.example .env

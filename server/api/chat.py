@@ -1,8 +1,8 @@
-from fastapi import APIRouter
+# server/api/chat.py (수정 후)
+
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
-from langgraph.graph import StateGraph, END
 from server.agents.state import AgentState
-from server.agents.master_agent import route_request
 from typing import List
 
 router = APIRouter()
@@ -13,27 +13,18 @@ class ChatRequest(BaseModel):
     history: List[str] = []
 
 @router.post("/chat")
-async def chat_endpoint(request: ChatRequest):
+async def chat_endpoint(request_data: ChatRequest, request: Request):
     """
     채팅 요청을 받아 LangGraph 워크플로우를 실행하고 결과를 반환하는 API 엔드포인트.
     """
-    # LangGraph 워크플로우 정의
-    workflow = StateGraph(AgentState)
-    
-    # 노드 정의
-    workflow.add_node("router", route_request)
-    
-    # 그래프 빌드
-    workflow.set_entry_point("router")
-    workflow.add_edge("router", END)
-    
-    # 그래프 컴파일
-    app = workflow.compile()
-    
+    # --- 개선: 매번 그래프를 컴파일하는 대신, 시작 시 생성된 앱을 사용 ---
+    app = request.app.state.langgraph_app
+    # --- 개선 끝 ---
+
     # 입력 데이터 준비
-    inputs = AgentState(query=request.query, history=request.history, response="", documents=[])
-    
+    inputs = AgentState(query=request_data.query, history=request_data.history, response="", documents=[])
+
     # 워크플로우 실행
     final_state = app.invoke(inputs)
-    
-    return {"response": final_state["response"]}
+
+    return {"response": final_state.get("response", "오류가 발생했습니다. 응답을 생성하지 못했습니다.")}

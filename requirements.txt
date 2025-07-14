@@ -1,0 +1,26 @@
+# Main application framework
+fastapi
+uvicorn[standard]
+streamlit
+
+# Core AI/ML libraries
+langchain
+langgraph
+tiktoken
+
+# LLM provider
+langchain-groq
+
+# Vector store and embeddings
+faiss-cpu
+sentence-transformers
+langchain-community
+
+# Google Tools integration
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
+# Configuration management
+pydantic-settings
+python-dotenv

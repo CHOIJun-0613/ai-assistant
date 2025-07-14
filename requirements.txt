@@ -24,3 +24,5 @@ google-auth-oauthlib
 # Configuration management
 pydantic-settings
 python-dotenv
+
+duckduckgo-search

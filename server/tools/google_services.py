@@ -38,4 +38,4 @@ def get_gmail_service():
 def get_calendar_service():
     """Google Calendar API 서비스를 빌드하고 반환합니다."""
     credentials = get_credentials()
-    return build("calendar", "v1", credentials=credentials)
+    return build("calendar", "v3", credentials=credentials)

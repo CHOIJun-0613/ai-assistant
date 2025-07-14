@@ -47,3 +47,13 @@ pip install -r requirements.txt
 # .env 파일을 생성하고 아래 내용을 채워넣으세요.
 # (보안을 위해 .gitignore에 등록되어 있습니다)
 cp .env.example .env
+
+
+# 'documents' 폴더의 텍스트 파일을 기반으로 FAISS 벡터 저장소를 생성합니다.(처음 1회만 생성)
+python -m server.rag.ingest
+
+# FastAPI 백엔드 서버를 실행합니다.
+uvicorn server.main:app --reload
+
+# Streamlit 프론트엔드 클라이언트를 실행합니다.
+streamlit run app/app.py

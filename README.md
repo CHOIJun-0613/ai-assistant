@@ -1,8 +1,10 @@
 # 🚀 AI Assistant Project (Groq & RAG & Google Tools)
 
-이 프로젝트는 `ai-assist-google`을 기반으로, 핵심 AI 모델을 Groq의 초고속 언어 모델(LPU)과 HuggingFace의 오픈소스 임베딩 모델로 전환하여 구현한 AI 업무 자동화 비서 애플리케이션입니다.
+핵심 AI 모델을 Groq의 초고속 언어 모델(LPU)과 HuggingFace의 오픈소스 임베딩 모델로 전환하여 구현한 AI 업무 자동화 비서 애플리케이션입니다.
 
-기존 Google Gemini 대신 Llama 3와 같은 고성능 오픈소스 LLM을 Groq API를 통해 사용하여, 비용 효율적이고 빠른 응답 속도를 경험할 수 있습니다. 또한, 한국어 환경에 특화된 오픈소스 임베딩 모델을 활용하여 RAG(검색 증강 생성) 성능을 최적화하고, Google Workspace(Gmail, Calendar) 도구를 연동하여 실제 업무 생산성을 극대화합니다.
+Llama 3와 같은 고성능 오픈소스 LLM을 Groq API를 통해 사용하여, 비용 효율적이고 빠른 응답 속도를 경험할 수 있습니다. 
+또한, 한국어 환경에 특화된 오픈소스 임베딩 모델을 활용하여 RAG(검색 증강 생성) 성능을 최적화하고, 
+Google Workspace(Gmail, Calendar) 도구를 연동하여 실제 업무 생산성을 극대화합니다.
 
 ## 🌟 주요 특징
 

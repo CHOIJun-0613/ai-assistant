@@ -30,9 +30,49 @@ def gmail_search_tool(query: str):
     사용자의 Gmail에서 특정 키워드로 이메일을 검색합니다.
     예: '오늘 온 메일', '김민준에게서 온 메일'
     """
+    # --- 자연어 쿼리 변환 로직 추가 ---
+    def convert_query(natural_query):
+        import re
+        from datetime import datetime, timedelta
+
+        today = datetime.utcnow().date()
+        # 기존 "오늘", "어제" 처리
+        if "오늘" in natural_query:
+            # 오늘 받은 메일: 오늘 날짜로 검색
+            after = today.strftime("%Y/%m/%d")
+            return f"after:{after}"
+        if "어제" in natural_query:
+            # 어제 받은 메일
+            yesterday = (today - timedelta(days=1)).strftime("%Y/%m/%d")
+            return f"after:{yesterday} before:{today.strftime('%Y/%m/%d')}"
+        # "7월12일"과 같은 날짜 패턴 처리
+        m = re.search(r"(\d{1,2})월(\d{1,2})일", natural_query)
+        if m:
+            month = int(m.group(1))
+            day = int(m.group(2))
+            year = today.year
+            # 올해 날짜로 변환
+            try:
+                target_date = datetime(year, month, day).date()
+                after = target_date.strftime("%Y/%m/%d")
+                before = (target_date + timedelta(days=1)).strftime("%Y/%m/%d")
+                return f"after:{after} before:{before}"
+            except Exception as e:
+                print(f"[WARN] 날짜 변환 실패: {e}")
+        # 보낸이 검색
+        m = re.search(r"(.+)에게서 온 메일", natural_query)
+        if m:
+            sender = m.group(1)
+            return f'from:{sender}'
+        # 기본: 원본 쿼리 그대로 사용
+        return natural_query
+
     try:
+        gmail_query = convert_query(query)
+        print(f"[INFO] Gmail Tool: 변환된 쿼리 '{gmail_query}'로 이메일 조회 시작")
         service = get_gmail_service()
-        results = service.users().messages().list(userId="me", q=query, maxResults=5).execute()
+        results = service.users().messages().list(userId="me", q=gmail_query, maxResults=5).execute()
+        print(f"[INFO] Gmail Tool: 검색 결과 {results}")
         messages = results.get("messages", [])
         
         if not messages:
@@ -46,7 +86,7 @@ def gmail_search_tool(query: str):
             subject = next(d["value"] for d in headers if d["name"] == "Subject")
             sender = next(d["value"] for d in headers if d["name"] == "From")
             email_list.append(f"- 보낸이: {sender}, 제목: {subject}")
-            
+            print(f"- 보낸이: {sender}, 제목: {subject}")
         return "\n".join(email_list)
     except Exception as e:
         print(f"[ERROR] Gmail Tool: {e}")
